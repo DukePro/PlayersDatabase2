@@ -65,28 +65,28 @@ namespace MyProgramm
 
     class Player
     {
-        public int PlayerId { get; private set; }
-        public string PlayerName { get; private set; }
-        public int PlayerLevel { get; private set; }
-        public bool IsPlayerBanned { get; private set; }
+        public int Id { get; private set; }
+        public string Name { get; private set; }
+        public int Level { get; private set; }
+        public bool IsBanned { get; private set; }
 
-        public Player(int playerId, string playerName, int playerLevel = 0, bool isPlayerBanned = false)
+        public Player(int id, string name, int level = 0, bool isBanned = false)
         {
-            PlayerId = playerId;
-            PlayerName = playerName;
-            PlayerLevel = playerLevel;
-            IsPlayerBanned = isPlayerBanned;
+            Id = id;
+            Name = name;
+            Level = level;
+            IsBanned = isBanned;
         }
 
         public void Ban()
         {
-            IsPlayerBanned = true;
+            IsBanned = true;
             Console.WriteLine("Игрок забанен");
         }
 
         public void Unban()
         {
-            IsPlayerBanned = false;
+            IsBanned = false;
             Console.WriteLine("Игрок разбанен");
         }
     }
@@ -94,14 +94,14 @@ namespace MyProgramm
     class Database
     {
         private List<Player> _players = new List<Player>();
-        int LastId = 0;
+        private int _lastId;
 
         public void AddPlayer()
         {
-            int id = LastId++;
+            ++_lastId;
             Console.WriteLine("Введите имя игрока");
             string name = Console.ReadLine();
-            _players.Add(new Player(id, name));
+            _players.Add(new Player(_lastId, name));
         }
 
         public void RemovePlayer()
@@ -125,10 +125,10 @@ namespace MyProgramm
 
         public void PlayerInfo(Player player)
         {
-            Console.WriteLine($"Id: {player.PlayerId} | Name: {player.PlayerName} | Level: {player.PlayerLevel} | Ban status: {player.IsPlayerBanned}");
+            Console.WriteLine($"Id: {player.Id} | Name: {player.Name} | Level: {player.Level} | Ban status: {player.IsBanned}");
         }
 
-        public int GetNumber()
+        private int GetNumber()
         {
             int parsedNumber = 0;
             bool isParsed = false;
@@ -147,7 +147,7 @@ namespace MyProgramm
             return parsedNumber;
         }
 
-        public bool TryGetPlayer(out Player player)
+        private bool TryGetPlayer(out Player player)
         {
             player = null;
             Console.WriteLine("Введите ID игрока:");
@@ -155,7 +155,7 @@ namespace MyProgramm
 
             for (int i = 0; i < _players.Count; i++)
             {
-                if (_players[i].PlayerId == id)
+                if (_players[i].Id == id)
                 {
                     player = _players[i];
                     Console.WriteLine("Игрок найден");
@@ -169,9 +169,7 @@ namespace MyProgramm
 
         public void BanPlayer()
         {
-            Player player;
-
-            if (TryGetPlayer(out player))
+            if (TryGetPlayer(out Player player))
             {
                 player.Ban();
             }
@@ -179,9 +177,7 @@ namespace MyProgramm
 
         public void UnbanPlayer()
         {
-            Player player;
-
-            if (TryGetPlayer(out player))
+            if (TryGetPlayer(out Player player))
             {
                 player.Unban();
             }
